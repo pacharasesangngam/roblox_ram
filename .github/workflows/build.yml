@@ -1,0 +1,33 @@
+name: Build RobloxRAMGuard EXE
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: |
+          pip install customtkinter psutil pywin32 pyinstaller
+
+      - name: Build EXE
+        run: |
+          pyinstaller --onefile --windowed --name "RobloxRAMGuard" ram_guard.py
+
+      - name: Upload EXE
+        uses: actions/upload-artifact@v4
+        with:
+          name: RobloxRAMGuard
+          path: dist/RobloxRAMGuard.exe
